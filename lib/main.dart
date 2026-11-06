@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:prestige_app/presentation/pages/maps_details_page.dart';
 import 'package:prestige_app/presentation/pages/onboarding_page.dart';
 
 import 'firebase_options.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: OnboardingPage(),
+      home: MapsDetailsPage(),
     );
   }
 }
