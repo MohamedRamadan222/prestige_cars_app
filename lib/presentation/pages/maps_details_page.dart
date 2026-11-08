@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:prestige_app/data/models/car.dart';
 
 class MapsDetailsPage extends StatelessWidget {
-  const MapsDetailsPage({super.key});
+  final Car car;
+
+  const MapsDetailsPage({super.key, required this.car});
 
   @override
   Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).padding.bottom; // SAFE AREA
+
     return Scaffold(
       extendBodyBehindAppBar: true,
+
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
@@ -30,16 +36,22 @@ class MapsDetailsPage extends StatelessWidget {
               ),
             ],
           ),
-          Positioned(bottom: 0, left: 0, right: 0, child: carDetailsCard()),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: carDetailsCard(car, bottomInset), // SAFE AREA
+          ),
         ],
       ),
     );
   }
 }
 
-Widget carDetailsCard() {
+Widget carDetailsCard(Car car, double bottomInset) {
+  // SAFE AREA
   return SizedBox(
-    height: 350,
+    height: 350 + bottomInset, // SAFE AREA
     child: Stack(
       children: [
         Container(
@@ -56,10 +68,11 @@ Widget carDetailsCard() {
             ],
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 20),
               Text(
-                'car.model',
+                car.model,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
@@ -71,11 +84,111 @@ Widget carDetailsCard() {
                 children: [
                   Icon(Icons.directions_car, color: Colors.white, size: 16),
                   SizedBox(width: 5),
+                  Text(
+                    '> ${car.distance} km',
+                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                  SizedBox(width: 10),
+                  Icon(Icons.battery_full, color: Colors.white, size: 14),
+                  Text(
+                    car.fuelCapacity.toString(),
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
                 ],
               ),
             ],
           ),
         ),
+
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            padding: EdgeInsets.fromLTRB(
+              20,
+              20,
+              20,
+              20 + bottomInset,
+            ), // SAFE AREA
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Features',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                featuresIcons(),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '\$${car.pricePerHour}/day',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      child: Text(
+                        'Book Now',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        Positioned(
+          top: 50,
+          right: 5,
+          child: Image.asset('assets/white_car.png'),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget featuresIcons() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      featureIcon(Icons.local_gas_station, 'Diesel', 'Common Rail'),
+      featureIcon(Icons.speed, 'Acceleration', '0 - 100km/s'),
+      featureIcon(Icons.ac_unit, 'Cold', 'Temp Control'),
+    ],
+  );
+}
+
+Widget featureIcon(IconData icon, String title, String subTitle) {
+  return Container(
+    height: 100,
+    width: 100,
+    padding: EdgeInsets.all(5),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(color: Colors.grey, width: 1),
+    ),
+    child: Column(
+      children: [
+        Icon(icon, size: 28),
+        Text(title, style: TextStyle(fontSize: 13)),
+        Text(subTitle, style: TextStyle(color: Colors.grey, fontSize: 10)),
       ],
     ),
   );

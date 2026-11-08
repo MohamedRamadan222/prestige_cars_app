@@ -1,14 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:prestige_app/data/models/car.dart';
 import 'package:prestige_app/presentation/pages/maps_details_page.dart';
 import 'package:prestige_app/presentation/pages/onboarding_page.dart';
 
 import 'firebase_options.dart';
+import 'inject_container.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  initInject();
   runApp(const MyApp());
 }
 
@@ -20,8 +23,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: MapsDetailsPage(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      home: OnboardingPage(),
     );
   }
 }
